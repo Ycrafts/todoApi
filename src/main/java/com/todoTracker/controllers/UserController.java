@@ -3,6 +3,7 @@ package com.todoTracker.controllers;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -79,7 +80,14 @@ public class UserController {
         UserResponse userResponse = userService.getUserById(id);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
-
+    
+    @GetMapping("/")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+    public ResponseEntity<List<UserResponse>> getAllUsers(){
+        List<UserResponse> userResponse = userService.getAllUsers();
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+    }
+    
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserResponse> getCurrentUser() {
