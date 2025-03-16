@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.todoTracker.dtos.UpdateRequest;
-import com.todoTracker.dtos.UserResponse;
 import com.todoTracker.dtos.auth.RegisterRequest;
 import com.todoTracker.dtos.auth.RegisterResponse;
+import com.todoTracker.dtos.auth.UpdateRequest;
+import com.todoTracker.dtos.auth.UserResponse;
 import com.todoTracker.models.User;
 import com.todoTracker.repositories.UserRepository;
 import com.todoTracker.services.UserService;

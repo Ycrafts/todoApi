@@ -1,4 +1,4 @@
-package com.todoTracker.dtos; // Or com.todoTracker.dtos.user
+package com.todoTracker.dtos.auth; // Or com.todoTracker.dtos.user
 
 import lombok.Data;
 

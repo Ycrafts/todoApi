@@ -1,7 +1,7 @@
 package com.todoTracker.services;
 
-import com.todoTracker.dtos.UpdateRequest;
-import com.todoTracker.dtos.UserResponse;
+import com.todoTracker.dtos.auth.UpdateRequest;
+import com.todoTracker.dtos.auth.UserResponse;
 import com.todoTracker.models.User;
 import com.todoTracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +56,6 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    
 
     public User updateUser(Long id, UpdateRequest updateRequest) {
         Optional<User> existingUserOptional = userRepository.findById(id);
