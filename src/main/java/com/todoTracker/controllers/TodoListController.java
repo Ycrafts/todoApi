@@ -13,7 +13,7 @@ import com.todoTracker.services.TodoListService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/todolists")
+@RequestMapping("/api/v1/todo-lists")
 @PreAuthorize("isAuthenticated()") // Secure all endpoints in this controller
 @RequiredArgsConstructor
 public class TodoListController {

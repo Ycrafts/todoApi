@@ -17,7 +17,7 @@ import com.todoTracker.services.UserService;
 import com.todoTracker.util.JwtUtil;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

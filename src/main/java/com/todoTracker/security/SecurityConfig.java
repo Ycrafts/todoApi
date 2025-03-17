@@ -32,9 +32,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Allow login endpoint without authentication
+                        .requestMatchers("/api/v1/auth/**").permitAll() // Allow login endpoint without authentication
                         .requestMatchers("/api/v1/users/register").permitAll() // Allow registration endpoint without authentication
-                        .requestMatchers("/api/v1/users/").authenticated() // Protect the /api/users/me endpoint
+                        .requestMatchers("/api/v1/users/").authenticated() 
+                        .requestMatchers("/api/v1/todo-items").authenticated()
+                        .requestMatchers("/api/v1/todo-lists/**").authenticated()// Protect the /api/users/me endpoint
                         .anyRequest().authenticated() // All other requests need authentication
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
