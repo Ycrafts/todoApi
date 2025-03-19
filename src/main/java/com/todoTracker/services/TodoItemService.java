@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.todoTracker.dtos.TodoItemDTO;
-import com.todoTracker.dtos.TodoListDTO;
 import com.todoTracker.dtos.auth.UserResponse;
 import com.todoTracker.models.TodoItem;
 import com.todoTracker.models.TodoItem.TodoStatus;

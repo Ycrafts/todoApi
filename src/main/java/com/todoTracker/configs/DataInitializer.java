@@ -9,24 +9,51 @@ import com.todoTracker.repositories.TodoListRepository;
 import com.todoTracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Configuration
 @Profile("dev") // This will only run in the 'dev' profile
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
+
     private final UserRepository userRepository;
     private final TodoListRepository todoListRepository;
     private final TodoItemRepository todoItemRepository;
     private final PasswordEncoder passwordEncoder; // Inject your PasswordEncoder
 
+
     @Override
     public void run(String... args) throws Exception {
+        //create admin user
+        String adminUsername = "yonatan"; // Replace with your desired admin username
+            String adminEmail = "yonatanassefa60@gmail.com"; // Replace with your desired admin email
+            String adminPassword = "PassPass@123"; // Replace with a strong password
+
+            Optional<User> adminUserOptional = userRepository.findByUsername(adminUsername);
+
+            if (adminUserOptional.isEmpty()) {
+                User adminUser = User.builder()
+                        .username(adminUsername)
+                        .email(adminEmail)
+                        .password(passwordEncoder.encode(adminPassword))
+                        .roles(List.of("ADMIN"))
+                        .build();
+                userRepository.save(adminUser);
+                System.out.println("Admin user created successfully.");
+            } else {
+                System.out.println("Admin user already exists.");
+            }
+
+
         // Create a test user
         User testUser = new User();
         testUser.setUsername("testUser");
@@ -56,7 +83,7 @@ public class DataInitializer implements CommandLineRunner {
         buyMilk.setName("Buy milk");
         buyMilk.setDescription("From the local supermarket");
         buyMilk.setTodoList(savedPersonalList);
-        buyMilk.setDueDate(LocalDateTime.now().plusDays(5));
+        buyMilk.setDueDate(LocalDate.now().plusDays(5));
         buyMilk.setStatus(TodoStatus.PENDING);
         buyMilk.setCreatedBy(savedTestUser);
         buyMilk.setCreatedAt(LocalDateTime.now());
@@ -67,7 +94,7 @@ public class DataInitializer implements CommandLineRunner {
         payBills.setName("Pay bills");
         payBills.setDescription("Electricity and internet");
         payBills.setTodoList(savedPersonalList);
-        payBills.setDueDate(LocalDateTime.now().plusWeeks(1));
+        payBills.setDueDate(LocalDate.now().plusWeeks(1));
         payBills.setStatus(TodoStatus.PENDING);
         payBills.setCreatedBy(savedTestUser);
         payBills.setCreatedAt(LocalDateTime.now());
@@ -79,7 +106,7 @@ public class DataInitializer implements CommandLineRunner {
         preparePresentation.setName("Prepare presentation");
         preparePresentation.setDescription("For the Monday meeting");
         preparePresentation.setTodoList(savedWorkList);
-        preparePresentation.setDueDate(LocalDateTime.now().plusDays(3));
+        preparePresentation.setDueDate(LocalDate.now().plusDays(3));
         preparePresentation.setStatus(TodoStatus.PENDING);
         preparePresentation.setCreatedBy(savedTestUser);
         preparePresentation.setCreatedAt(LocalDateTime.now());
@@ -90,7 +117,7 @@ public class DataInitializer implements CommandLineRunner {
         sendReport.setName("Send weekly report");
         sendReport.setDescription("To the team");
         sendReport.setTodoList(savedWorkList);
-        sendReport.setDueDate(LocalDateTime.now().plusDays(4));
+        sendReport.setDueDate(LocalDate.now().plusDays(4));
         sendReport.setStatus(TodoStatus.PENDING);
         sendReport.setCreatedBy(savedTestUser);
         sendReport.setCreatedAt(LocalDateTime.now());

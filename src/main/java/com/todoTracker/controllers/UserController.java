@@ -1,6 +1,8 @@
 package com.todoTracker.controllers;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -31,18 +33,20 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@Tag(name = "Users", description = "Operations related to user management")
 public class UserController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService; // Inject UserService
 
     @PostMapping("/register")
+    @Operation(summary = "Register a new user")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             return new ResponseEntity<>(new RegisterResponse("Username already exists"), HttpStatus.BAD_REQUEST);
@@ -51,7 +55,7 @@ public class UserController {
             return new ResponseEntity<>(new RegisterResponse("Email already exists"), HttpStatus.BAD_REQUEST);
         }
 
-        User user = User.builder()
+        User user = User.builder() // basically a constructor
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -62,7 +66,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')") 
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete a user by ID (Admin only)")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
@@ -72,24 +77,27 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-   private final UserService userService; // Inject UserService
+
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and (#id == authentication.principal.id or hasRole('ADMIN'))")
+    @PreAuthorize("isAuthenticated() and (#id == authentication.principal.id or hasRole('ADMIN'))") // current user's id or admin
+    @Operation(summary = "Get a user by ID (Self or Admin)")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         UserResponse userResponse = userService.getUserById(id);
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
-    
+
     @GetMapping("/")
     @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+    @Operation(summary = "Get all users (Admin only)")
     public ResponseEntity<List<UserResponse>> getAllUsers(){
         List<UserResponse> userResponse = userService.getAllUsers();
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
-    
+
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Get the currently logged-in user")
     public ResponseEntity<UserResponse> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -111,7 +119,7 @@ public class UserController {
         }
 
         if (userId != null) {
-            return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK); 
+            return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -119,6 +127,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated() and (#id == authentication.principal.id or hasRole('ADMIN'))")
+    @Operation(summary = "Update a user by ID (Self or Admin)")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateRequest updateRequest) {
         User updatedUser = userService.updateUser(id, updateRequest);
         UserResponse userResponse = new UserResponse();
@@ -128,4 +137,9 @@ public class UserController {
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/test")
+    @Operation(summary = "Test endpoint (No authentication required)")
+    public String test() {
+        return new String("success");
+    }
 }

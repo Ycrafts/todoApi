@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import com.todoTracker.models.TodoList;
 import com.todoTracker.models.User;
 import com.todoTracker.dtos.TodoListDTO;
+import com.todoTracker.dtos.auth.UserResponse;
 import com.todoTracker.repositories.TodoListRepository;
 import com.todoTracker.repositories.UserRepository;
 
@@ -122,7 +123,7 @@ public class TodoListService {
         return dto;
     }
 
-    private com.todoTracker.dtos.auth.UserResponse mapUserToUserResponseDTO(User user) {
+    private UserResponse mapUserToUserResponseDTO(User user) {
         com.todoTracker.dtos.auth.UserResponse userResponse = new com.todoTracker.dtos.auth.UserResponse();
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());

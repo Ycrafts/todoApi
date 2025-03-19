@@ -1,5 +1,6 @@
 package com.todoTracker.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -41,7 +42,7 @@ public class TodoItem {
     private TodoStatus status = TodoStatus.PENDING; //item selection(PENDING and COMPLETED)
 
     @Column(nullable = false)
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

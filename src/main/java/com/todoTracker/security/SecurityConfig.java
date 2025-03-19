@@ -29,22 +29,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll() // Allow login endpoint without authentication
-                        .requestMatchers("/api/v1/users/register").permitAll() // Allow registration endpoint without authentication
-                        .requestMatchers("/api/v1/users/").authenticated() 
-                        .requestMatchers("/api/v1/todo-items").authenticated()
-                        .requestMatchers("/api/v1/todo-lists/**").authenticated()// Protect the /api/users/me endpoint
-                        .anyRequest().authenticated() // All other requests need authentication
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    http
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/api/v1/auth/**").permitAll()
+                    .requestMatchers("/api/v1/users/register").permitAll()
+                    .requestMatchers("/api/v1/users/me").authenticated()
+                    .requestMatchers("/api/v1/users/").authenticated()
+                    .requestMatchers("/api/v1/todo-items").authenticated()
+                    .requestMatchers("/api/v1/todo-lists/**").authenticated()
+                    .requestMatchers("/api/v1/users/test").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()  
+                        .requestMatchers("/webjars/**").permitAll()
 
-        return http.build();
-    }
+                    .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+}
 
     @Bean
     public PasswordEncoder passwordEncoder() {

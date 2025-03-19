@@ -1,5 +1,6 @@
 package com.todoTracker.dtos;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.todoTracker.models.TodoItem.TodoStatus;
@@ -24,7 +25,7 @@ public class TodoItemDTO {
     private String name;
     private String description;
     private TodoStatus status;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long todoListId; // To associate with a TodoList

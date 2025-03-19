@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/todo-lists")
-@PreAuthorize("isAuthenticated()") // Secure all endpoints in this controller
+@PreAuthorize("isAuthenticated()") 
 @RequiredArgsConstructor
 public class TodoListController {
 

@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private UserResponse convertToUserResponse(User user) {
+    private UserResponse convertToUserResponse(User user) { // the dto for User
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setUsername(user.getUsername());
@@ -42,22 +42,20 @@ public class UserService implements UserDetailsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
         User user = userOptional.get();
+
         UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setUsername(user.getUsername());
-        response.setEmail(user.getEmail());
+        response = convertToUserResponse(user);
         return response;
     }
 
-    public List<UserResponse> getAllUsers() {
+    public List<UserResponse> getAllUsers() { //admin only
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(this::convertToUserResponse)
-                .collect(Collectors.toList());
+            .map(this::convertToUserResponse)
+            .collect(Collectors.toList());
     }
 
-
-    public User updateUser(Long id, UpdateRequest updateRequest) {
+    public User updateUser(Long id, UpdateRequest updateRequest) { // id and dto params
         Optional<User> existingUserOptional = userRepository.findById(id);
 
         if (existingUserOptional.isEmpty()) {
